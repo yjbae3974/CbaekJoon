@@ -11,7 +11,7 @@ struct Alphabet{
 };
 
 int main(){
-    char word[51];
+    char word[55];
     scanf("%s",word);
     int length = strlen(word);
     int alpha = 0;
@@ -91,5 +91,5 @@ int main(){
 
         }
     }
-    printf("%s",answer);
+    printf("%s %d",answer,strlen(answer));
 }

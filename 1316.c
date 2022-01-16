@@ -17,7 +17,7 @@ int main(){
         strcpy(dynamic,word);
         int alphabet[26] ={0};
         int length = strlen(dynamic);
-        int former = dynamic[0] - 97;
+        int former = dynamic[0] - 97;   //aabbccdd  0
         int ifgroup = 1;
         alphabet[former] = 1;
         for (int i = 0; i < length; ++i) {

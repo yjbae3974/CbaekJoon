@@ -1,96 +1,74 @@
-//
-// Created by 배연준 on 2022/01/26.
-//
-
-#include <stdlib.h>
 #include <stdio.h>
-typedef struct{
-    int num;
-    int index;
-}Number;
+#include <stdlib.h>
+
+typedef struct {
+    int max;
+    int ptr;
+    int *stk;
+}IntStack;
+
+
+int Initialize(IntStack *s, int max){
+    s->ptr = 0;
+    if((s->stk = calloc(max,sizeof (int))) == NULL){
+        s->max = 0;
+        return -1;
+    }
+    s->max = max;
+    return 0;
+}
+
+int Push(IntStack *s, int x){
+    if(s->ptr >= s->max)
+    {return -1;}
+    s->stk[s->ptr++] = x;
+    return 0;
+}
+int Pop(IntStack *s, int *x){
+    if(s->ptr <= 0 )
+        return -1;
+    *x = s->stk[--s->ptr];
+    return 0;
+}
+int IsEmpty(IntStack *s){
+    if(s->ptr <= 0){
+        return 1;
+    }
+    else
+        return 0;
+}
+int Peek(IntStack *s){
+    if(s->ptr <= 0){
+        return -1;
+    }
+    return s->stk[s->ptr - 1];
+}
 
 int main(){
     int num;
     scanf("%d",&num);
-    int *arr = calloc(num,sizeof (int));
-    Number *stk = calloc(num,sizeof (Number));
-    int tmp, prev, ptr = 0, firstMax;
-    int ifmax = 0;
-    int stkMax = 0;
+    IntStack seq;
+    int* stk = calloc(num,sizeof (int));
+    int* ans = calloc(num, sizeof(int));
+    Initialize(&seq, num);
     for (int i = 0; i < num; ++i) {
-        if(i == 0){
-            scanf("%d",&arr[i]);
-            prev = arr[i];
-            firstMax = arr[i];
+        scanf("%d", &stk[i]);
+    }
+    int garbage;
+    for (int i = num - 1; i >=0 ; i--) {
+        while(Peek(&seq) <= stk[i] && !IsEmpty(&seq)){   //스택 맨 위 값이 더 작거나 스택이 비지 않았을 경우에 반복.
+            Pop(&seq, &garbage);
+        }
+        if(IsEmpty(&seq)){  //만약 스택이 비었으면
+            ans[i] = -1;
+            Push(&seq,stk[i]);
         }
         else{
-            scanf("%d",&arr[i]);
-
-            if(firstMax < arr[i] && ifmax == 0){
-                firstMax = arr[i];
-                ifmax = 1;
-            }
-            if(arr[i]>prev){
-                stk[ptr].num = arr[i];
-                stk[ptr].index = i;
-                if(arr[i] > stkMax){
-                    stkMax = arr[i];
-                }
-                ptr++;
-            }
-            prev = arr[i];
+            ans[i] = Peek(&seq);
+            Push(&seq, stk[i]);
         }
     }
-    if(ifmax == 1){
-        printf("%d ",firstMax);
-    }
-    else{
-        printf("-1 ");
-    }
-    int stkSize = ptr;
-
-    ptr = 0;
-    for (int i = 1; i < num; ++i) {
-        int temp = arr[i];
-        if(stk[ptr].index > i){ //현재 주시하는 친구의 인덱스보다 작은거를 볼 때
-            if(stk[ptr].num <= arr[i]){  //그래서 만약 얘가 더 작으면
-                if(arr[i]>stkMax){
-                    printf("-1 ");
-                    break;
-                }
-                int ifprint = 0;
-                for (int j = ptr + 1; j < stkSize; ++j) {
-                    if(stk[j].num > arr[i]){
-                        printf("%d ",stk[j].num);
-                        ifprint = 1;
-                        break;
-                    }
-                    else{
-                        continue;
-                    }
-                }
-                if(ifprint == 0)
-                    printf("-1 ");
-            }
-            else{   //만약 stk[ptr]이 더 크면
-                printf("%d ",stk[ptr].num);
-            }
-        }
-        else if(stk[ptr].index == i){
-            ptr++;
-            int ifprint = 0;
-            for (int j = ptr; j < stkSize; ++j) {
-                if(stk[j].num > arr[i]){
-                    ifprint = 1;
-                    printf("%d ",stk[j].num);
-                    break;
-                }
-            }
-            if(ifprint == 0)
-                printf("-1 ");
-        }
-        else{
-            printf("-1 ");
-        }
+    for (int i = 0; i < num; ++i) {
+        printf("%d ",ans[i]);
     }
 }

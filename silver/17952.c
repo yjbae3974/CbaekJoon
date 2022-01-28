@@ -25,17 +25,25 @@ int Initialize(IntStack *s, int max){
     return 0;
 }
 
-int Push(IntStack *s, int x){
+int Push(IntStack *s, int x, int y){
     if(s->ptr >= s->max)
     {return -1;}
-    s->stk[s->ptr++] = x;
+    s->stk[s->ptr].score = x;
+    s->stk[s->ptr].time = y;
+    s->ptr++;
     return 0;
 }
-int Pop(IntStack *s, int *x){
+int Pop(IntStack *s,int *score){
     if(s->ptr <= 0 )
         return -1;
-    *x = s->stk[--s->ptr];
-    return 0;
+    else{
+        s->stk[s->ptr - 1].time--;
+        if(s->stk[s->ptr - 1].time == 0){
+            *score += s->stk[--s->ptr].score;
+        }
+        return 1;
+    }
+
 }
 
 int main(){
@@ -43,7 +51,19 @@ int main(){
     scanf("%d",&num);
     IntStack arr;
     Initialize(&arr,num);
-    for (int i = 0; i < ; ++i) {
-
+    int score = 0;
+    for (int i = 0; i < num; ++i) {
+        int tmp;
+        scanf("%d",&tmp);
+        if(tmp == 0){
+            Pop(&arr, &score);
+        }
+        else{
+            int tmpscore, tmptime;
+            scanf("%d %d",&tmpscore, &tmptime);
+            Push(&arr,tmpscore,tmptime);
+            Pop(&arr,&score);
+        }
     }
+    printf("%d",score);
 }

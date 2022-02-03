@@ -1,7 +1,3 @@
-//
-// Created by 배연준 on 2022/01/27.
-//
-
 #include<stdio.h>
 #include <stdlib.h>
 #include <string.h>
